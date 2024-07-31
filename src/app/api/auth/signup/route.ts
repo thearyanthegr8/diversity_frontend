@@ -12,29 +12,44 @@ export async function POST(request: NextRequest) {
   const supabase = createRouteHandlerClient<Database>({
     cookies: () => cookieStore,
   });
-  const { data, error } = await supabase.auth.signUp({
-    email,
-    password,
-    phone: mobile.toString(),
-  });
 
-  if (error) {
-    return NextResponse.json({ error: error }, { status: 500 });
-  }
-
-  if (data.user) {
-    await prisma.user.create({
-      data: {
-        id: data.user.id,
-        name,
-        email,
-        mobile,
-        type,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      phone: mobile.toString(),
     });
-  }
 
-  return NextResponse.json({ message: "User registered" }, { status: 201 });
+    if (error) {
+      return NextResponse.json({ error: error }, { status: 500 });
+    }
+
+    if (data.user) {
+      const user = await prisma.user.create({
+        data: {
+          user_id: data.user.id,
+          name,
+          email,
+          mobile,
+          type,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        select: {
+          user_id: true,
+          name: true,
+          email: true,
+          mobile: true,
+          type: true,
+          current_roadmap_id: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      });
+
+      return NextResponse.json({ user: user }, { status: 201 });
+    }
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 }

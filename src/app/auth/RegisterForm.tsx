@@ -47,10 +47,13 @@ function RegisterForm() {
     setLoading(true);
     try {
       const register = await axios.post("/api/auth/signup", values);
-      if (values.type === "STUDENT") {
+      if (
+        register.data.user.current_roadmap_id === "" ||
+        !register.data.user.current_roadmap_id
+      ) {
+        router.push("/onboarding/skill-selection");
+      } else {
         router.push("/dashboard/learn");
-        // } else {
-        //   router.push("/dashboard/recruit");
       }
     } catch (e: any) {
       toast({
