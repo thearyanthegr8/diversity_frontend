@@ -15,13 +15,48 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  mobile   BigInt
-  type    UserType @default(STUDENT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  user_id        String   @id @default(cuid())
+  email          String   @unique
+  name           String
+  mobile         BigInt?
+  type           UserType @default(STUDENT)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  current_roadmap_id String?
+
+  Roadmap        Roadmap[]
+}
+
+model Roadmap {
+  roadmap_id          String   @id @default(cuid())
+  skill_id            String
+  skill               Skills  @relation(fields: [skill_id], references: [skill_id])
+  beginning_skill_level String
+  target_skill_level  String
+  start_date          DateTime @default(now())
+  courses             Json
+  points              Int @default(0)
+
+  user_id             String
+  user                User @relation(fields: [user_id], references: [user_id])
+
+  @@index([user_id])
+}
+
+model SkillCategory {
+  category_id    String   @id @default(cuid())
+  category_name  String
+
+  Skills         Skills[]
+}
+
+model Skills {
+  skill_id    String   @id @default(cuid())
+  skill_name  String
+  category_id String
+  category    SkillCategory @relation(fields: [category_id], references: [category_id])
+
+  Roadmap     Roadmap[]
 }
 
 enum UserType {

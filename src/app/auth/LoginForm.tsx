@@ -7,10 +7,9 @@ import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { Database } from "@/lib/types/database.types";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -26,31 +25,32 @@ function LoginForm() {
     },
   });
 
-  const supabase = createClientComponentClient<Database>();
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
   async function onSubmit(values: z.infer<typeof loginSchema>) {
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email: values.email,
-      password: values.password,
-    });
 
-    if (error) {
+    try {
+      const login = await axios.post("/api/auth/login", values);
+
+      if (
+        login.data.user.current_roadmap_id === "" ||
+        !login.data.user.current_roadmap_id
+      ) {
+        router.push("/onboarding/skill-selection");
+      } else {
+        router.push("/dashboard/learn");
+      }
+    } catch (error: any) {
       toast({
         title: "Unable to login",
         description: error.message,
         variant: "destructive",
       });
+    } finally {
       setLoading(false);
-    } else {
-      if (data?.user?.user_metadata?.type === "STUDENT") {
-        router.push("/dashboard/learn");
-        // } else {
-        //   router.push("/dashboard");
-      }
     }
   }
 
