@@ -75,6 +75,9 @@ const config = {
       aspectRatio: {
         "2/3": "3 / 2",
       },
+      flex: {
+        "2": "2 2 0%",
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],

@@ -53,36 +53,7 @@ function Page() {
     console.log("Roadmap: " + roadmap);
   }, [roadmap]);
 
-  return (
-    <div>
-      <div className="px-8 py-12">
-        {roadmap && <CourseList courses={roadmap} />}
-        {/* {roadmap_data["Level 1"]["Introduction to AI & ML"].map((course) => (
-          <div key={course.id} className="flex gap-4">
-            <div className="flex-1">
-              <h2 className="text-lg font-bold">{course.title}</h2>
-              <p className="text-sm text-gray-500">{course.description}</p>
-              <a
-                href={course.url}
-                target="_blank"
-                rel="noreferrer"
-                className="text-blue-500"
-              >
-                View Course
-              </a>
-            </div>
-            <Image
-              src={course.thumbnail}
-              alt={course.title}
-              className="w-[20rem] aspect-video object-cover rounded-md"
-              width={100}
-              height={100}
-            />
-          </div>
-        ))} */}
-      </div>
-    </div>
-  );
+  return <div>{roadmap && <CourseList courses={roadmap} />}</div>;
 }
 
 export default Page;
