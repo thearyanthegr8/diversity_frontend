@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { X, Bookmark } from "lucide-react";
 import {
@@ -12,12 +13,19 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Progress } from "@/components/ui/progress";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
-function page() {
+function Page() {
+  const router = useRouter();
+
   return (
     <div className="h-full flex flex-col gap-4">
       <div className="flex flex-row items-center gap-4">
-        <Button variant={"ghost"} className="aspect-square p-0">
+        <Button
+          variant={"ghost"}
+          className="aspect-square p-0"
+          onClick={() => router.push("/dashboard/practice")}
+        >
           <X size={20} />
         </Button>
         <p>Python - Skill Checkpoint Quiz #1 </p>
@@ -82,4 +90,4 @@ function page() {
   );
 }
 
-export default page;
+export default Page;

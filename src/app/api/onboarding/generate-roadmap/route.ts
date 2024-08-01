@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  let url = `http://127.0.0.1:8000/generate-roadmap?skill=${skill_name?.skill_name}&current_skill_level=${currentSkillLevel}&target_skill_level=${targetSkillLevel}`;
+  let url = `${process.env.SERVER_URL}/generate-roadmap?skill=${skill_name?.skill_name}&current_skill_level=${currentSkillLevel}&target_skill_level=${targetSkillLevel}`;
 
   if (price !== undefined) {
     url += `&price=${price}`;

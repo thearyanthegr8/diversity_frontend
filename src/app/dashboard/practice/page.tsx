@@ -1,94 +1,68 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { Input } from "@/components/ui/input";
 import { MousePointerClick } from "lucide-react";
+import axios from "axios";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
-function page() {
+interface Skill {
+  map(arg0: (skill: any) => React.JSX.Element): React.ReactNode;
+  skill_id: string;
+  skill_name: string;
+  category: {
+    category_name: string;
+  };
+}
+
+function Page() {
+  const [skillsByCategory, setSkillsByCategory] = useState<Skill[]>([]);
+  const [selectedSkill, setSelectedSkill] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    async function getSkills() {
+      const response = await axios.get("/api/onboarding/skill-selection");
+
+      setSkillsByCategory(response.data.skills);
+    }
+
+    getSkills();
+  }, []);
+
   return (
-    <div className="flex flex-row h-full">
-      <Sidebar />
-      <div className="flex flex-col">
-        <div className="text-xl font-bold pl-6 pt-6 pb-4">
-          Search for the topic/skill you want to quiz yourself on!
-        </div>
-        <div className="pl-5 w-full">
-          <Input placeholder="🔍 Find your quiz!" />
-        </div>
-        <div className="text-xl font-bold pl-6 pt-28 pb-4">Programming</div>
-        <div className="text-base pl-6 pt-1 pb-4">
-          Our programming quizzes are designed to test for on-the-job skills
-          like the ability to solve problems , write code to add new
-          functionalities, spot and fix bugs etc.
-        </div>
-        <div className="grid grid-cols-4 gap-4 pl-6">
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">JavaScript</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">Java</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">Python</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">PHP</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">C#</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">Ruby</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">C++</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
-          </div>
-          <div className="bg-slate-200 rounded-lg h-16 content-center">
-            <div className="pl-3 font-xl font-bold">
-              <div className="flex flex-row">Embedded</div>
-              <div className="flex flex-row-reverse pr-2">
-                <MousePointerClick />
-              </div>
-            </div>
+    <div className="flex flex-col gap-8">
+      <h1 className="text-2xl">Select which skill you want to test</h1>
+      <Separator />
+      {Object.entries(skillsByCategory).map(([categoryName, skills]) => (
+        <div key={categoryName} className="flex flex-col gap-4">
+          <h2 className="text-md font-bold">{categoryName}</h2>
+          <div className="flex flex-wrap gap-4">
+            {skills.map((skill: any) => (
+              <Button
+                key={skill.skill_id}
+                variant={`${
+                  selectedSkill === skill.skill_id ? "default" : "outline"
+                }`}
+                onClick={() => setSelectedSkill(skill.skill_id)}
+              >
+                <p>{skill.skill_name}</p>
+              </Button>
+            ))}
           </div>
         </div>
-      </div>
+      ))}
+      <Button
+        className="w-[180px]"
+        disabled={selectedSkill === null}
+        onClick={() => router.push(`/dashboard/practice/quizzes`)}
+      >
+        Next
+      </Button>
     </div>
   );
 }
 
-export default page;
+export default Page;
