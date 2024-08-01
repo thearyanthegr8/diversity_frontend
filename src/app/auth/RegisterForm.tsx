@@ -22,7 +22,7 @@ import { Label } from "@/components/ui/label";
 const registerSchema = z.object({
   name: z.string().min(3),
   email: z.string().email(),
-  mobile: z.number().min(10),
+  mobile: z.string(),
   password: z.string().min(8),
   type: z.string(),
 });
@@ -33,6 +33,7 @@ function RegisterForm() {
     defaultValues: {
       name: "",
       email: "",
+      mobile: "",
       password: "",
       type: "",
     },
@@ -93,7 +94,6 @@ function RegisterForm() {
           name="mobile"
           label="Mobile"
           placeholder={"9876543210"}
-          type="number"
           isDisabled={loading}
           required
         />

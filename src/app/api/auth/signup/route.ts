@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      phone: mobile.toString(),
     });
 
     if (error) {
