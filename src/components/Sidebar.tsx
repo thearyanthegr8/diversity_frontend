@@ -4,6 +4,7 @@ import {
   Dumbbell,
   GraduationCap,
   LifeBuoy,
+  LogOut,
   Medal,
   Search,
   UsersRound,
@@ -11,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { createAvatar } from "@dicebear/core";
 import { lorelei } from "@dicebear/collection";
@@ -67,36 +68,57 @@ export default function Sidebar() {
 
   // const svg = avatar.toString();
 
+  const supabase = createClientComponentClient<Database>();
+  const router = useRouter();
+
+  async function logout() {
+    const { error } = await supabase.auth.signOut();
+
+    if (!error) {
+      router.push("/auth");
+    }
+  }
+
   return (
-    <div className="flex flex-col w-[70px] min-w-[70px] max-h-screen h-screen p-4 bg-[#F7F7F7] fixed left-0 top-0 gap-6">
-      <div className="flex pt-2">
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-          {/* {svg} */}
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </div>
-      {dashboard_links.map((section, index) => (
-        <div key={index} className="flex flex-col gap-4">
-          <Separator />
-          {section.links.map((link, index) => (
-            <Link key={index} href={`/dashboard/${link.name.toLowerCase()}`}>
-              <Button
-                key={index}
-                variant={`${
-                  path.includes(`/dashboard/${link.name.toLowerCase()}`)
-                    ? "outline"
-                    : "ghost"
-                }`}
-                size="icon"
-                className="p-2"
-              >
-                {link.icon}
-              </Button>
-            </Link>
-          ))}
+    <div className="flex flex-col w-[70px] min-w-[70px] max-h-screen h-screen p-4 bg-[#F7F7F7] fixed left-0 top-0 justify-between">
+      <div>
+        <div className="flex pt-2">
+          <Avatar>
+            <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+            {/* {svg} */}
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
         </div>
-      ))}
+        {dashboard_links.map((section, index) => (
+          <div key={index} className="flex flex-col gap-4">
+            <Separator />
+            {section.links.map((link, index) => (
+              <Link key={index} href={`/dashboard/${link.name.toLowerCase()}`}>
+                <Button
+                  key={index}
+                  variant={`${
+                    path.includes(`/dashboard/${link.name.toLowerCase()}`)
+                      ? "outline"
+                      : "ghost"
+                  }`}
+                  size="icon"
+                  className="p-2"
+                >
+                  {link.icon}
+                </Button>
+              </Link>
+            ))}
+          </div>
+        ))}
+      </div>
+      <Button
+        variant="ghost"
+        size="icon"
+        className="p-2"
+        onClick={() => logout()}
+      >
+        <LogOut size={18} />
+      </Button>
     </div>
   );
 }
