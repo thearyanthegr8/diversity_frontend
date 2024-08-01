@@ -6,17 +6,17 @@ import Image from "next/image";
 export default function Home() {
   return (
     <div>
-      <div className="h-screen w-full px-12 ">
+      <div className="h-screen w-full px-12">
         <div className="flex flex-col h-screen w-full items-center justify-center p-6 px-12 text-slate-400 xl:text-slate-400 bg-[url(../images/homebg.png)] bg-cover bg-center">
-          <div className="w-full bg-gray-100 rounded-xl shadow-md">
+          <div className="w-full bg-gray-100 rounded-xl shadow-md py-2">
             <div className="container mx-auto flex justify-between items-center py-1 px-6">
               <div className="flex items-center">
                 <Image
                   src="/logo.png"
                   alt="Logo"
-                  className="h-10 w-10"
-                  width={10}
-                  height={10}
+                  className="h-8 w-8"
+                  width={100}
+                  height={100}
                 />
                 <span className="ml-3 text-xl font-bold text-gray-800">
                   diversity.exe
