@@ -84,7 +84,7 @@ export default function Sidebar() {
               <Button
                 key={index}
                 variant={`${
-                  path === `/dashboard/${link.name.toLowerCase()}`
+                  path.includes(`/dashboard/${link.name.toLowerCase()}`)
                     ? "outline"
                     : "ghost"
                 }`}
